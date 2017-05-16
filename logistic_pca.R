@@ -23,11 +23,12 @@ for (i in 2:51) {
 }
 
 # training set ----
+set.seed(1569)
 Train <- createDataPartition(pca_multi$pop, p=0.8, list=FALSE)
 training <- pca_multi[ Train, ]
 testing <- pca_multi[ -Train, ]
 ctrl <- trainControl(method = "repeatedcv", number = 20, savePredictions = TRUE)
-set.seed(2)
+
 model_pca_50 <- train(pop ~ . ,
                       data=pca_multi, method= "nnet",
                       maxit = 300, MaxNWts = 3000,
@@ -37,7 +38,7 @@ model_pca_50 <- train(pop ~ . ,
 pred = predict(model_pca_50, newdata=testing)
 confusion.pca_50 <-confusionMatrix(data=pred, testing$pop); 
 print(confusion.pca_50)
-
+pred_all_pca_50 <- predict(model_pca_50, newdata = ran_multi)
 
 
 n <- c(5,10,15,20,25,30,35,40,45,50)
