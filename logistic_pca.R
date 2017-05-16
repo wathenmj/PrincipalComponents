@@ -9,16 +9,16 @@ setwd("C:/Users/WATS5I/prjct_PCA")
 fourPCs_10k_snps <- read.delim("C:/Users/WATS5I/prjct_PCA/fourPCs_top1000_snps.txt")
 pop_names <- read.csv("pop_names", sep="")
 
-pca_50_A <- fread("pca_50_A.raw")
-pca_50_A <- pca_50_A[ , -c(1:6)]
+pca_5_A <- fread("pca_5_A.raw")
+pca_5_A <- pca_5_A[ , -c(1:6)]
 
 
 # models ####
-pca_multi <- data.frame(pop_names$pop, pca_50_A)
+pca_multi <- data.frame(pop_names$pop, pca_5_A)
 names(pca_multi)[names(pca_multi) == 'pop_names.pop'] <- 'pop'
 # pca_multi <- pca_multi[ ,-23] # remove columns where there is only one genotype value
 
-for (i in 2:51) {
+for (i in 2:6) {
   pca_multi[ , i] <- as.factor(pca_multi[ , i])
 }
 
@@ -29,16 +29,16 @@ training <- pca_multi[ Train, ]
 testing <- pca_multi[ -Train, ]
 ctrl <- trainControl(method = "repeatedcv", number = 20, savePredictions = TRUE)
 
-model_pca_50 <- train(pop ~ . ,
+model_pca_5 <- train(pop ~ . ,
                       data=pca_multi, method= "nnet",
                       maxit = 300, MaxNWts = 3000,
                       family="binomial",
                       trControl = ctrl)
 
-pred = predict(model_pca_50, newdata=testing)
-confusion.pca_50 <-confusionMatrix(data=pred, testing$pop); 
-print(confusion.pca_50)
-pred_all_pca_50 <- predict(model_pca_50, newdata = ran_multi)
+pred = predict(model_pca_5, newdata=testing)
+confusion.pca_5 <-confusionMatrix(data=pred, testing$pop); 
+print(confusion.pca_5)
+pred_all_pca_5<- predict(model_pca_5, newdata = ran_multi)
 
 
 n <- c(5,10,15,20,25,30,35,40,45,50)
